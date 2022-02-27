@@ -4,7 +4,7 @@ from selenium import webdriver
 class ParsHH:
     browser = webdriver.Chrome()
     list_vacancy = [] #name/href/pay/company
-    def __init__(self, link="https://novosibirsk.hh.ru/", imp_wait=3):
+    def __init__(self, link="https://novosibirsk.hh.ru/", imp_wait=0.1):
         self.link = link
         self.imp_wait = imp_wait
         self.browser.get(self.link)
@@ -19,6 +19,14 @@ class ParsHH:
         count = self.browser.find_elements_by_css_selector('div.vacancy-serp-item')
         for i in count:
             print(i.find_element_by_css_selector('a[data-qa="vacancy-serp__vacancy-title"]').text)
+            try:
+                print(i.find_element_by_css_selector('span[data-qa="vacancy-serp__vacancy-compensation"]').text)
+            except:
+                print('None info')
+
+            print(print(i.find_element_by_css_selector('a[data-qa="vacancy-serp__vacancy-employer"]').text))
+            print(i.find_element_by_css_selector('a[data-qa="vacancy-serp__vacancy-title"]').get_attribute("href"))
+            print('----------------------------------------')
         
 
 
