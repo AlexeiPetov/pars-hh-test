@@ -1,9 +1,10 @@
 from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
+import os
 
 class ParsHH:
     browser = webdriver.Chrome()
-    list_vacancy = [] #name/href/pay/company
+    list_vacancy = [] 
     def __init__(self, link="https://novosibirsk.hh.ru/", imp_wait=0.1):
         self.link = link
         self.imp_wait = imp_wait
@@ -22,32 +23,16 @@ class ParsHH:
             try:
                 print(i.find_element_by_css_selector('span[data-qa="vacancy-serp__vacancy-compensation"]').text)
             except:
-                print('None info')
+                print('None')
 
-            print(print(i.find_element_by_css_selector('a[data-qa="vacancy-serp__vacancy-employer"]').text))
+            print(i.find_element_by_css_selector('a[data-qa="vacancy-serp__vacancy-employer"]').text)
             print(i.find_element_by_css_selector('a[data-qa="vacancy-serp__vacancy-title"]').get_attribute("href"))
             print('----------------------------------------')
         
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 if __name__ == "__main__":
+    os.system('cls')
     x = ParsHH()
     x.go_to_the_page()
     x.search_vacancy()
-    input()
