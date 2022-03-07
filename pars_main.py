@@ -1,4 +1,4 @@
-from ssl import Options
+
 from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
 import os
