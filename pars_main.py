@@ -6,24 +6,6 @@ import sqlite3
 
 class ParsHH:
 
-
-    options = webdriver.ChromeOptions()
-    options.add_argument('log-level=3')
-
-    browser = webdriver.Chrome(chrome_options=options)
-
-    db = sqlite3.connect('SQL.db') #подключил БД
-    sql = db.cursor()
-    sql.execute('''CREATE TABLE IF NOT EXISTS users (
-        NAMEVACANCY TEXT,
-        COMPENSATION TEXT,
-        NAMEORGANIZATION TEXT,
-        LINKVACANCY TEXT
-    )''') #создал таблицу
-    db.commit()
-
-#######################################
-
     def __init__(self, link="https://novosibirsk.hh.ru/",
                         search_profession='QA Automation',
                         imp_wait=0.1):
@@ -33,6 +15,21 @@ class ParsHH:
 
         self.list_vacancy = []
 
+        self.db = sqlite3.connect('SQL.db') #подключил БД
+        self.sql = self.db.cursor()
+        self.sql.execute('''CREATE TABLE IF NOT EXISTS users (
+            NAMEVACANCY TEXT,
+            COMPENSATION TEXT,
+            NAMEORGANIZATION TEXT,
+            LINKVACANCY TEXT
+            )''') #создал таблицу
+        self.db.commit()
+
+
+        self.options = webdriver.ChromeOptions()
+        self.options.add_argument('log-level=3')
+
+        self.browser = webdriver.Chrome(chrome_options=self.options)
         self.browser.implicitly_wait(imp_wait)
 
 ######################################
@@ -43,6 +40,7 @@ class ParsHH:
         element_seartch.click()
         element_seartch.send_keys(self.search_profession)
         element_seartch.send_keys(Keys.ENTER)
+
 
     def search_vacancy(self):
         count = self.browser.find_elements(By.CSS_SELECTOR,'div.vacancy-serp-item')
@@ -63,6 +61,8 @@ class ParsHH:
 
 
     def save_db(self):
+        self.sql.execute('DELETE FROM users')
+        self.db.commit()
         for val in self.list_vacancy:
             self.sql.execute("INSERT INTO users VALUES(?, ?, ?, ?);", val)
             self.db.commit()        
@@ -70,6 +70,9 @@ class ParsHH:
     def close_db(self):
         self.db.close()
 
+    def clear_db(self):
+        self.sql.execute('DELETE FROM users')
+        self.db.commit()
 ######################################
 
     def output_db(self):
@@ -103,10 +106,11 @@ class ParsHH:
 if __name__ == "__main__":
     os.system('cls')
     x = ParsHH()
+    x.clear_db()
     x.go_to_the_page()
     x.search_vacancy()
     x.output_new_vacancy()
-    #x.output_db()
+    x.output_db()
     x.save_db()
     x.close_db()
     
